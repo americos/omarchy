@@ -5,6 +5,9 @@
 -- The down/up split works around Hyprland send_shortcut sometimes leaving
 -- synthetic key state stuck/repeating.
 -- https://github.com/hyprwm/Hyprland/discussions/14099
+-- Keys go out as keycodes (code:38 = A, 54 = C, 55 = V, 53 = X) because key names
+-- resolve through the active layout, so on e.g. Colemak-DH "C" lands on the
+-- physical X key and apps decode it as Ctrl+X.
 local function send_shortcut_once(mods, key)
   return function()
     hl.dispatch(hl.dsp.send_key_state({ mods = mods, key = key, state = "down" }))
@@ -42,8 +45,8 @@ local function universal_clipboard_shortcut(default_mods, default_key, terminal_
   end
 end
 
-o.bind("SUPER + A", "Select all", send_shortcut_once("CTRL", "A"))
-o.bind("SUPER + C", "Universal copy", universal_clipboard_shortcut("CTRL", "C", "CTRL SHIFT", "C"))
-o.bind("SUPER + V", "Universal paste", universal_clipboard_shortcut("CTRL", "V", "CTRL SHIFT", "V"))
-o.bind("SUPER + X", "Universal cut", send_shortcut_once("CTRL", "X"))
+o.bind("SUPER + A", "Select all", send_shortcut_once("CTRL", "code:38"))
+o.bind("SUPER + C", "Universal copy", universal_clipboard_shortcut("CTRL", "code:54", "CTRL SHIFT", "code:54"))
+o.bind("SUPER + V", "Universal paste", universal_clipboard_shortcut("CTRL", "code:55", "CTRL SHIFT", "code:55"))
+o.bind("SUPER + X", "Universal cut", send_shortcut_once("CTRL", "code:53"))
 o.bind("SUPER + CTRL + V", "Clipboard manager", { panel = "omarchy.clipboard" })
