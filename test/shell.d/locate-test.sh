@@ -78,7 +78,7 @@ with tempfile.TemporaryDirectory(prefix="omarchy-locate-") as scratch:
   check("prune_bind_mounts\\000\n0\\000" in debug and "/.snapshots\\000" in debug,
         "real updatedb overrides bind-mount pruning and adds root snapshots to exclusions")
   check(all(fs + "\\000" in debug.upper() for fs in ("FUSE.RCLONE", "SMB3", "DAVFS", "CEPH")),
-        "real updatedb skips network and FUSE filesystems missing from Arch's defaults")
+        "updatedb is configured to skip network and FUSE filesystems missing from Arch's defaults")
   entries = subprocess.check_output(["plocate", "--database", str(database), ""], text=True).splitlines()
   check(str(visible) in entries and str(hidden) not in entries,
         "real locate indexes current files and preserves literal administrator exclusions")
